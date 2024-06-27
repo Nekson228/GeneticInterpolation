@@ -1,0 +1,26 @@
+contourpy @ file:///work/perseverance-python-buildout/croot/contourpy_1701756524386/work
+cycler @ file:///tmp/build/80754af9/cycler_1637851556182/work
+fonttools @ file:///croot/fonttools_1713551344105/work
+iniconfig @ file:///home/linux1/recipes/ci/iniconfig_1610983019677/work
+kiwisolver @ file:///work/perseverance-python-buildout/croot/kiwisolver_1698847502605/work
+matplotlib @ file:///croot/matplotlib-suite_1713336378214/work
+mkl-fft @ file:///work/perseverance-python-buildout/croot/mkl_fft_1698845673361/work
+mkl-random @ file:///work/perseverance-python-buildout/croot/mkl_random_1698845720894/work
+mkl-service==2.4.0
+numpy==2.0.0
+packaging @ file:///croot/packaging_1710807400464/work
+pillow @ file:///croot/pillow_1714398848491/work
+pluggy @ file:///work/perseverance-python-buildout/croot/pluggy_1698805497733/work
+ply @ file:///work/perseverance-python-buildout/croot/ply_1698846188635/work
+pyparsing @ file:///work/perseverance-python-buildout/croot/pyparsing_1698847881454/work
+PyQt5==5.15.10
+PyQt5-sip @ file:///work/perseverance-python-buildout/croot/pyqt-split_1698847927472/work/pyqt_sip
+pytest @ file:///croot/pytest_1717793244625/work
+python-dateutil @ file:///croot/python-dateutil_1716495738603/work
+setuptools==69.5.1
+sip @ file:///work/perseverance-python-buildout/croot/sip_1698846977033/work
+six @ file:///tmp/build/80754af9/six_1644875935023/work
+tornado @ file:///croot/tornado_1718740109488/work
+unicodedata2 @ file:///croot/unicodedata2_1713212950228/work
+wheel==0.43.0
+matplotlib~=3.8.4
