@@ -1,6 +1,8 @@
 from typing import TypedDict
+from json import dump, load
+from random import randint
 
-from PyQt5.QtWidgets import QDockWidget, QMessageBox
+from PyQt5.QtWidgets import QDockWidget, QMessageBox, QFileDialog
 from PyQt5.QtCore import pyqtSignal
 
 from src.gui.parameters_dock_ui import Ui_ParametersDock
@@ -23,6 +25,10 @@ class ParametersDock(QDockWidget, Ui_ParametersDock):
         self.setupUi(self)
         self.goButton.clicked.connect(self.emit_go_button_clicked)
 
+        self.saveButton.clicked.connect(self.save_settings)
+        self.loadButton.clicked.connect(self.load_settings)
+        self.randomButton.clicked.connect(self.random_settings)
+
     def verify_input(self) -> bool:
         function_text = self.functionLineEdit.text()
 
@@ -31,9 +37,13 @@ class ParametersDock(QDockWidget, Ui_ParametersDock):
             return False
 
         try:
-            list(map(float, function_text.split(FUNCTION_COEFFICIENTS_SPLITTER)))
+            function_data = list(map(float, function_text.split(FUNCTION_COEFFICIENTS_SPLITTER)))
         except ValueError:
             QMessageBox.critical(self, "Error", "Invalid data entered for function.")
+            return False
+
+        if len(function_data) > 9:
+            QMessageBox.critical(self, "Error", "Polynomial degree must be not greater than 8.")
             return False
 
         if self.leftBoundDoubleSpinBox.value() >= self.rightBoundDoubleSpinBox.value():
@@ -58,3 +68,43 @@ class ParametersDock(QDockWidget, Ui_ParametersDock):
             'left_bound': self.leftBoundDoubleSpinBox.value(),
             'right_bound': self.rightBoundDoubleSpinBox.value(),
         }
+
+    def set_settings(self, settings: SettingsData) -> None:
+        self.functionLineEdit.setText(FUNCTION_COEFFICIENTS_SPLITTER.join(map(str, settings['f(x)'])))
+        self.stepsAmountSpinBox.setValue(settings['steps_amount'])
+        self.leftBoundDoubleSpinBox.setValue(settings['left_bound'])
+        self.rightBoundDoubleSpinBox.setValue(settings['right_bound'])
+
+    def save_file_dialog(self) -> tuple[str, str]:
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        return QFileDialog.getSaveFileName(self, "Save File", "", "JSON Files (*.json)", options=options)
+
+    def load_file_dialog(self) -> tuple[str, str]:
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        return QFileDialog.getOpenFileName(self, "Open File", "", "JSON Files (*.json)", options=options)
+
+    def save_settings(self) -> None:
+        filename, _ = self.save_file_dialog()
+        if not filename:
+            return
+        with open(filename, 'w') as file:
+            dump(self.get_settings(), file)
+
+    def load_settings(self) -> None:
+        filename, _ = self.load_file_dialog()
+        if not filename:
+            return
+        with open(filename, 'r') as file:
+            settings = load(file)
+        self.set_settings(settings)
+        self.emit_go_button_clicked()
+
+    def random_settings(self) -> None:
+        random_list = [randint(-10, 10) for _ in range(randint(3, 9))]
+        self.functionLineEdit.setText(FUNCTION_COEFFICIENTS_SPLITTER.join(map(str, random_list)))
+        self.stepsAmountSpinBox.setValue(randint(30, 100))
+        self.leftBoundDoubleSpinBox.setValue(randint(-30, 0))
+        self.rightBoundDoubleSpinBox.setValue(randint(1, 30))
+        self.emit_go_button_clicked()
