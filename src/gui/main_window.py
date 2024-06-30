@@ -30,7 +30,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.playButton.clicked.connect(self.play)
         self.nextButton.clicked.connect(self.next)
 
-        self.parametersDock.goButtonClicked.connect(self.plotFunction)
+        self.parametersDock.goButtonClicked.connect(self.update_session)
 
         self.isPlaying = False
 
@@ -47,7 +47,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def next(self):
         print('Next')
 
-    def plotFunction(self, settings: SettingsData) -> None:
-        polynomial = npp.Polynomial(settings['f(x)'])
-        self.canvas.clear()
+    def update_session(self, settings: SettingsData) -> None:
+        polynomial = npp.Polynomial(settings['f(x)'][::-1])
+        self.canvas.clear_all()
         self.canvas.plot_function(polynomial, settings['left_bound'], settings['right_bound'])

@@ -27,7 +27,7 @@
       <item>
        <widget class="QLineEdit" name="functionLineEdit">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Polynomial of &lt;span style=&quot; font-weight:600;&quot;&gt;degree at most 8&lt;/span&gt; represented by a list of double coefficients, &lt;span style=&quot; font-weight:600;&quot;&gt;separated by space&lt;/span&gt;, in ascending order of degree.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Polynomial of &lt;span style=&quot; font-weight:600;&quot;&gt;degree at most 8&lt;/span&gt; represented by a list of double coefficients, &lt;span style=&quot; font-weight:600;&quot;&gt;separated by space&lt;/span&gt;, in descending order of degree.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>
       </item>
@@ -80,7 +80,7 @@
       <item>
        <widget class="QLabel" name="stepsAmountLabel">
         <property name="text">
-         <string>Steps amount</string>
+         <string>Steps Amount</string>
         </property>
        </widget>
       </item>

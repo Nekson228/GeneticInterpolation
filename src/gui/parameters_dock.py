@@ -29,7 +29,7 @@ class ParametersDock(QDockWidget, Ui_ParametersDock):
         self.loadButton.clicked.connect(self.load_settings)
         self.randomButton.clicked.connect(self.random_settings)
 
-    def verify_input(self) -> bool:
+    def validate_input(self) -> bool:
         function_text = self.functionLineEdit.text()
 
         if not function_text:
@@ -57,7 +57,7 @@ class ParametersDock(QDockWidget, Ui_ParametersDock):
         return True
 
     def emit_go_button_clicked(self):
-        if not self.verify_input():
+        if not self.validate_input():
             return
         self.goButtonClicked.emit(self.get_settings())
 
@@ -102,9 +102,10 @@ class ParametersDock(QDockWidget, Ui_ParametersDock):
         self.emit_go_button_clicked()
 
     def random_settings(self) -> None:
-        random_list = [randint(-10, 10) for _ in range(randint(3, 9))]
-        self.functionLineEdit.setText(FUNCTION_COEFFICIENTS_SPLITTER.join(map(str, random_list)))
-        self.stepsAmountSpinBox.setValue(randint(30, 100))
-        self.leftBoundDoubleSpinBox.setValue(randint(-30, 0))
-        self.rightBoundDoubleSpinBox.setValue(randint(1, 30))
+        self.set_settings({
+            'f(x)': [randint(-10, 10) for _ in range(randint(3, 9))],
+            'steps_amount': randint(30, 100),
+            'left_bound': randint(-30, 0),
+            'right_bound': randint(1, 30)
+        })
         self.emit_go_button_clicked()

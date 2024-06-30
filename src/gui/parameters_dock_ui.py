@@ -101,10 +101,10 @@ class Ui_ParametersDock(object):
         _translate = QtCore.QCoreApplication.translate
         ParametersDock.setWindowTitle(_translate("ParametersDock", "Parameters"))
         self.functionLabel.setText(_translate("ParametersDock", "f(x)="))
-        self.functionLineEdit.setToolTip(_translate("ParametersDock", "<html><head/><body><p>Polynomial of <span style=\" font-weight:600;\">degree at most 8</span> represented by a list of double coefficients, <span style=\" font-weight:600;\">separated by space</span>, in ascending order of degree.</p></body></html>"))
+        self.functionLineEdit.setToolTip(_translate("ParametersDock", "<html><head/><body><p>Polynomial of <span style=\" font-weight:600;\">degree at most 8</span> represented by a list of double coefficients, <span style=\" font-weight:600;\">separated by space</span>, in descending order of degree.</p></body></html>"))
         self.leftBoundLabel_2.setText(_translate("ParametersDock", "Left Bound"))
         self.rightBoundLabel.setText(_translate("ParametersDock", "Right Bound"))
-        self.stepsAmountLabel.setText(_translate("ParametersDock", "Steps amount"))
+        self.stepsAmountLabel.setText(_translate("ParametersDock", "Steps Amount"))
         self.loadButton.setToolTip(_translate("ParametersDock", "Export from file"))
         self.saveButton.setToolTip(_translate("ParametersDock", "Import to file"))
         self.randomButton.setToolTip(_translate("ParametersDock", "Randomize"))
