@@ -10,9 +10,6 @@ from src.gui.parameters_dock import ParametersDock, SettingsData
 from src.constants import ASSETS_DIR
 from src.gui.mpl_canvas import MplCanvas
 
-from src.algorithms.StepFunction import StepFunction
-
-
 class MainWindow(QMainWindow, Ui_MainWindow):
     PLAY_ICON_PATH = os.path.join(ASSETS_DIR, 'play-50.png')
     PAUSE_ICON_PATH = os.path.join(ASSETS_DIR, 'pause-50.png')
@@ -53,7 +50,4 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         polynomial = np.polynomial.Polynomial(settings['f(x)'][::-1])
         self.canvas.clear_all()
         self.canvas.plot_function(polynomial, settings['left_bound'], settings['right_bound'])
-        step_f = StepFunction(settings['steps_amount'], settings['left_bound'], settings['right_bound'],
-                              np.random.uniform(-10, 10, settings['steps_amount']))
-        self.canvas.plot_step_function(step_f)
         self.canvas.render()

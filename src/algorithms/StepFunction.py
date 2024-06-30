@@ -10,9 +10,9 @@ class StepFunction:
     def __init__(self, number_of_steps: int, left_bound: float, right_bound: float, steps_heights: np.ndarray):
         """
         Initialize the step-function.
-        :param number_of_steps: Amount steps in the function.
-        :param left_bound: Left bound of the function.
-        :param right_bound: Right bound of the function.
+        :param number_of_steps: steps amount in the function.
+        :param left_bound: left bound of the function.
+        :param right_bound: right bound of the function.
         :param steps_heights: np.ndarray with the float heights of the steps.
         """
         self.number_of_steps = number_of_steps

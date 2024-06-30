@@ -1,4 +1,3 @@
-from typing import TypedDict
 from json import dump, load
 from random import randint
 
@@ -9,12 +8,7 @@ from src.gui.parameters_dock_ui import Ui_ParametersDock
 
 from src.constants import FUNCTION_COEFFICIENTS_SPLITTER
 
-SettingsData = TypedDict('SettingsData', {
-    'f(x)': list[float],
-    'steps_amount': int,
-    'left_bound': float,
-    'right_bound': float,
-})
+from src.data_structures.SettingsData import SettingsData
 
 
 class ParametersDock(QDockWidget, Ui_ParametersDock):
