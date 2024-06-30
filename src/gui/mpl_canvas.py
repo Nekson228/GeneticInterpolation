@@ -7,6 +7,8 @@ import numpy as np
 from typing import Callable
 from enum import Enum
 
+from src.algorithms.StepFunction import StepFunction
+
 matplotlib.use('Qt5Agg')
 
 
@@ -26,18 +28,22 @@ class MplCanvas(FigureCanvas):
         x = np.linspace(left_bound, right_bound, int(self.figure.get_dpi() * self.figure.get_figwidth()))
         y = np.vectorize(f)(x)
         self.axes[0].plot(x, y, fmt)
-        self.draw()
+
+    def plot_step_function(self, step_f: StepFunction, fmt: str = 'r-'):
+        for height, interval in step_f:
+            self.axes[0].plot(interval, (height, height), fmt)
 
     def plot_quality_function(self, values: list[float], n: int, fmt: str = 'r-'):
         x = np.arange(1, n + 1)
         self.axes[1].plot(x, values, fmt)
-        self.draw()
 
     def clear(self, plot_type: PlotType = PlotType.MAIN_FUNCTION):
         self.axes[plot_type.value].clear()
-        self.draw()
 
     def clear_all(self):
         for ax in self.axes:
             ax.clear()
+
+    def render(self):
         self.draw()
+        self.flush_events()
