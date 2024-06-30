@@ -3,12 +3,14 @@ import os
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5 import QtGui, Qt
 
-import numpy.polynomial as npp
+import numpy as np
 
 from src.gui.main_window_ui import Ui_MainWindow
 from src.gui.parameters_dock import ParametersDock, SettingsData
 from src.constants import ASSETS_DIR
 from src.gui.mpl_canvas import MplCanvas
+
+from src.algorithms.StepFunction import StepFunction
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -48,6 +50,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print('Next')
 
     def update_session(self, settings: SettingsData) -> None:
-        polynomial = npp.Polynomial(settings['f(x)'][::-1])
+        polynomial = np.polynomial.Polynomial(settings['f(x)'][::-1])
         self.canvas.clear_all()
         self.canvas.plot_function(polynomial, settings['left_bound'], settings['right_bound'])
+        step_f = StepFunction(settings['steps_amount'], settings['left_bound'], settings['right_bound'],
+                              np.random.uniform(-10, 10, settings['steps_amount']))
+        self.canvas.plot_step_function(step_f)
+        self.canvas.render()

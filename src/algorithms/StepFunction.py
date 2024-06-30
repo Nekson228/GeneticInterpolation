@@ -19,6 +19,6 @@ class StepFunction:
         self.steps_heights = steps_heights
         self.step_intervals = np.linspace(left_bound, right_bound, number_of_steps + 1, endpoint=True)
 
-    def __iter__(self) -> Iterator[tuple[float, tuple[float, float]]]:
+    def __iter__(self) -> Iterator[tuple[float, np.ndarray[2, float]]]:
         for i in range(self.number_of_steps):
-            yield self.steps_heights[i], (i, i + 1)
+            yield self.steps_heights[i], self.step_intervals[i:i + 2]
