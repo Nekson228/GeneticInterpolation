@@ -23,7 +23,7 @@ class ParametersValidator:
         if len(function_data) > MAX_POLYNOMIAL_COEFF_AMOUNT:
             QMessageBox.critical(self.parent, "Error",
                                  f"Polynomial degree must be not greater than {MAX_POLYNOMIAL_COEFF_AMOUNT - 1}.")
-            return Falsere
+            return False
 
         if left_bound >= right_bound:
             QMessageBox.critical(self.parent, "Error", "Left bound must be less than right bound.")
