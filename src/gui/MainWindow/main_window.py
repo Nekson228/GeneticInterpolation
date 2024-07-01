@@ -5,10 +5,12 @@ from PyQt5 import QtGui, Qt
 
 import numpy as np
 
-from src.gui.main_window_ui import Ui_MainWindow
-from src.gui.parameters_dock import ParametersDock, SettingsData
+from src.gui.MainWindow.main_window_ui import Ui_MainWindow
+from src.gui.ParametersDock.parameters_dock import ParametersDock
+from src.data_structures.settings_data import SettingsData
 from src.constants import ASSETS_DIR
-from src.gui.mpl_canvas import MplCanvas
+from src.gui.MplCanvas.mpl_canvas import MplCanvas
+
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     PLAY_ICON_PATH = os.path.join(ASSETS_DIR, 'play-50.png')
