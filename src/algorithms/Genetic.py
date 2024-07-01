@@ -1,5 +1,6 @@
 import numpy as np
 import numpy.polynomial as np_poly
+from typing import Callable
 
 from src.data_structures.SettingsData import SettingsData
 
@@ -11,8 +12,8 @@ from src.algorithms.Mutation.MutationStrategy import MutationStrategy
 class GeneticAlgorithm:
     def __init__(self, population_size: int, mutation_rate: float, crossover_rate: float,
                  max_iterations: int, session_settings: SettingsData,
-                 crossover_strategy: CrossoverStrategy, mutation_strategy: MutationStrategy,
-                 selection_strategy: SelectionStrategy):
+                 crossover_strategy: Callable, mutation_strategy: Callable,
+                 selection_strategy: Callable):
         self.population_size = population_size
         self.mutation_rate = mutation_rate
         self.crossover_rate = crossover_rate
@@ -41,13 +42,28 @@ class GeneticAlgorithm:
         :param individual: individual to calculate quality function value for.
         :return: quality function value.
         """
-        pass
+        res = []
+        lst = np.linspace(self.left_bound, self.right_bound, self.chromosome_lenght)
+        for i in range(len(lst) - 1):
+            x_points = np.linspace(lst[i], lst[i + 1], 1000)
+            y_points = np.polyval(self.function[::-1], x_points)
+            dist = np.mean(abs(y_points - individual[i]))
+            res.append(dist)
+        return np.mean(res)
 
     def step(self) -> None:
         """
         Perform one iteration of the algorithm.
         :return: None
         """
+        new_population = [] #what
+        while(len(new_population) != self.population_size):
+            parents = self.selection_strategy(self.current_population)
+            offspings = self.crossover_strategy(parents)
+            mutations = tuple((self.mutation_rate(offspings[0]), self.mutation_rate(offspings[1])))
+            new_population.append(mutations[0])
+            new_population.append(mutations[1])
+        self.current_population = new_population
         pass
 
     def run(self) -> None:
@@ -55,6 +71,8 @@ class GeneticAlgorithm:
         Run the algorithm until reaching the maximum iteration amount.
         :return:
         """
+        while(self.current_iteration != self.max_iterations):
+            self.step()
         pass
 
     def get_top_individuals(self, n: int) -> np.ndarray:
