@@ -3,11 +3,11 @@ import numpy.polynomial as np_poly
 
 from src.data_structures.settings_data import SettingsData
 
-from src.algorithms.Crossover.CrossoverStrategy import CrossoverStrategy
-from src.algorithms.Selection.SelectionStrategy import SelectionStrategy
-from src.algorithms.Mutation.MutationStrategy import MutationStrategy
+from src.algorithms.Crossover.crossover_strategy import CrossoverStrategy
+from src.algorithms.Selection.selection_strategy import SelectionStrategy
+from src.algorithms.Mutation.mutation_strategy import MutationStrategy
 
-from src.algorithms.StepFunction import StepFunction
+from src.algorithms.step_function import StepFunction
 
 
 class GeneticAlgorithm:

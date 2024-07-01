@@ -7,7 +7,7 @@ import numpy as np
 from typing import Callable
 from enum import Enum
 
-from src.algorithms.StepFunction import StepFunction
+from src.algorithms.step_function import StepFunction
 
 matplotlib.use('Qt5Agg')
 

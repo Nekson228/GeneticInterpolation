@@ -1,5 +1,5 @@
-from src.algorithms.Crossover.UniformCrossover import UniformCrossover
-from src.algorithms.Crossover.IntermediateRecombination import IntermediateRecombination
+from src.algorithms.Crossover.uniform_crossover import UniformCrossover
+from src.algorithms.Crossover.intermediate_recombination import IntermediateRecombination
 
 import numpy as np
 

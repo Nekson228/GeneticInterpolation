@@ -1,4 +1,4 @@
-from src.algorithms.Selection.RankBasedSelection import RankBasedSelection
+from src.algorithms.Selection.rank_based_selection import RankBasedSelection
 
 import numpy as np
 

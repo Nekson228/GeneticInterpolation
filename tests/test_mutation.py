@@ -1,4 +1,4 @@
-from src.algorithms.Mutation.RealNumberMutation import RealNumberMutation
+from src.algorithms.Mutation.real_number_mutation import RealNumberMutation
 
 import numpy as np
 
