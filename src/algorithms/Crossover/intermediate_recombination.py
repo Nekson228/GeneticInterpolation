@@ -1,4 +1,4 @@
-from src.algorithms.Crossover.CrossoverStrategy import CrossoverStrategy
+from src.algorithms.Crossover.crossover_strategy import CrossoverStrategy
 
 import numpy as np
 

@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5 import QtGui, Qt
@@ -10,6 +11,8 @@ from src.gui.ParametersDock.parameters_dock import ParametersDock
 from src.data_structures.settings_data import SettingsData
 from src.constants import ASSETS_DIR
 from src.gui.MplCanvas.mpl_canvas import MplCanvas
+
+from src.algorithms.genetic import GeneticAlgorithm
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -33,23 +36,36 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.parametersDock.goButtonClicked.connect(self.update_session)
 
-        self.isPlaying = False
+        self.is_playing = False
+        self.is_controls_disabled = False
+
+        self.genetic: Optional[GeneticAlgorithm] = None
 
     def play(self):
-        if self.isPlaying:
-            self.isPlaying = False
+        if self.is_playing:
+            self.is_playing = False
             self.playButton.setIcon(MainWindow.PLAY_ICON)
             print('Pause')
         else:
-            self.isPlaying = True
+            self.is_playing = True
             self.playButton.setIcon(MainWindow.PAUSE_ICON)
             print('Play')
 
     def next(self):
         print('Next')
 
+    def toggle_controls(self, enable: bool) -> None:
+        self.playButton.setEnabled(enable)
+        self.nextButton.setEnabled(enable)
+        self.parametersDock.setEnabled(enable)
+
     def update_session(self, settings: SettingsData) -> None:
         polynomial = np.polynomial.Polynomial(settings['f(x)'][::-1])
         self.canvas.clear_all()
         self.canvas.plot_function(polynomial, settings['left_bound'], settings['right_bound'])
         self.canvas.render()
+
+        if self.is_controls_disabled:
+            self.toggle_controls(True)
+            self.is_controls_disabled = False
+        # TODO: Implement genetic algorithm initialization

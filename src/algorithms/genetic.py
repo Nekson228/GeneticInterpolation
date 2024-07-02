@@ -27,6 +27,8 @@ class GeneticAlgorithm:
         self.left_bound = session_settings['left_bound']
         self.right_bound = session_settings['right_bound']
 
+        self.points_per_step = GeneticAlgorithm.NUMBER_OF_POINTS // self.chromosome_length
+
         self.current_population = np.random.uniform(search_space[0], search_space[1],
                                                     size=(population_size, self.chromosome_length))
         self.current_quality_function_values = self.quality_function_vectorized(self.current_population)
@@ -35,12 +37,11 @@ class GeneticAlgorithm:
         self.current_iteration = 0
 
         self.best_quality_function_values: np.ndarray = np.zeros(max_iterations, dtype=float)
+        self.best_quality_function_values[0] = self.current_quality_function_values.min()
 
         self.crossover_strategy = crossover_strategy
         self.mutation_strategy = mutation_strategy
         self.selection_strategy = selection_strategy
-
-        self.points_per_step = GeneticAlgorithm.NUMBER_OF_POINTS // self.chromosome_length
 
     def quality_function_vectorized(self, population: np.ndarray) -> np.ndarray:
         """
@@ -49,33 +50,38 @@ class GeneticAlgorithm:
         :param population: 2D-array where each row is an individual.
         :return: 1D array of quality function values for each individual.
         """
-        step_function = StepFunction(self.chromosome_length, self.left_bound, self.right_bound, population)
-
-        heights, starts, stops = np.array([[height, start, stop] for height, start, stop in step_function]).T
-
-        x_points = np.linspace(starts, stops, self.points_per_step)
-        y_points = self.function(x_points)
-
-        dist = np.abs(y_points.T - heights)
-        return dist.sum(axis=1) / GeneticAlgorithm.NUMBER_OF_POINTS
+        # TODO: Move this to a separate class.
+        # TODO: optimize this function.
+        quality_values = np.zeros(self.population_size, dtype=float)
+        for idx, individual in enumerate(population):
+            step_function = StepFunction(self.chromosome_length, self.left_bound, self.right_bound, individual)
+            res = np.zeros(self.chromosome_length)
+            for i, (height, (start, stop)) in enumerate(step_function):
+                x_points = np.linspace(start, stop, self.points_per_step)
+                y_points = self.function(x_points)
+                res[i] = np.abs(y_points - height).sum()
+            quality_values[idx] = res.sum() / GeneticAlgorithm.NUMBER_OF_POINTS
+        return quality_values
 
     def step(self) -> bool:
         """
         Perform one iteration of the algorithm.
         :return: True if the algorithm should continue, False otherwise.
         """
+        self.current_iteration += 1
         if self.current_iteration == self.max_iterations:
             return False
-        self.current_iteration += 1
 
         new_population = []
         while len(new_population) < self.population_size:
             parents = self.selection_strategy.select(self.current_population,
                                                      self.current_quality_function_values)
-            offsprings = self.crossover_strategy.crossover(*parents)
-            mutations = (self.mutation_strategy.mutate(offsprings[0]),
-                         self.mutation_strategy.mutate(offsprings[1]))
-            new_population.extend(mutations)
+            offsprings = self.crossover_strategy.crossover(*parents) \
+                if np.random.random() < self.crossover_rate else parents
+            if np.random.random() < self.mutation_rate:
+                offsprings = (self.mutation_strategy.mutate(offsprings[0]),
+                              self.mutation_strategy.mutate(offsprings[1]))
+            new_population.extend(offsprings)
 
         if len(new_population) > self.population_size:
             new_population = new_population[:self.population_size]
@@ -108,3 +114,42 @@ class GeneticAlgorithm:
         :return: array of the best quality function values.
         """
         return self.best_quality_function_values[:self.current_iteration]
+
+
+def main():
+    from src.algorithms.Crossover.intermediate_recombination import IntermediateRecombination
+    from src.algorithms.Mutation.real_valued_mutation import RealValuedMutation
+    from src.algorithms.Selection.rank_based_selection import RankBasedSelection
+    settings: SettingsData = {
+        'steps_amount': 50,
+        'f(x)': [1, 0, 0],
+        'left_bound': -1,
+        'right_bound': 1
+    }
+    crossover_strategy = IntermediateRecombination()
+    mutation_strategy = RealValuedMutation(1)
+    selection_strategy = RankBasedSelection()
+    genetic_algorithm = GeneticAlgorithm(population_size=10, mutation_rate=0.1, crossover_rate=0.7,
+                                         max_iterations=1000, search_space=(0, 1), session_settings=settings,
+                                         crossover_strategy=crossover_strategy, mutation_strategy=mutation_strategy,
+                                         selection_strategy=selection_strategy)
+    genetic_algorithm.run()
+    best = genetic_algorithm.get_top_individuals(1)
+    import matplotlib as mpl
+    import matplotlib.pyplot as plt
+    fig, ax = plt.subplots(1, 2, sharey=False)
+    x = np.linspace(-1, 1, 1000)
+    y = np.polyval(settings['f(x)'], x)
+    ax[0].plot(x, y)
+    step_function = StepFunction(settings['steps_amount'], settings['left_bound'], settings['right_bound'], best[0])
+    for height, (start, stop) in step_function:
+        x = np.linspace(start, stop, 100)
+        y = np.polyval(settings['f(x)'], x)
+        ax[0].plot(x, np.full_like(x, height), 'r')
+        ax[1].plot(x, y)
+    ax[1].plot(genetic_algorithm.get_best_quality_function_values())
+    plt.show()
+
+
+if __name__ == '__main__':
+    main()

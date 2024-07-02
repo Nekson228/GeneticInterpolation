@@ -2,7 +2,7 @@ from typing import Optional
 
 from PyQt5.QtWidgets import QMessageBox, QWidget
 
-from src.constants import MIN_STEPS_AMOUNT, MAX_POLYNOMIAL_COEFF_AMOUNT, FUNCTION_COEFFICIENTS_SPLITTER
+from src.constants import MIN_STEPS_AMOUNT, MAX_POLYNOMIAL_COEFFICIENT_AMOUNT, FUNCTION_COEFFICIENTS_SPLITTER
 
 
 class ParametersValidator:
@@ -20,9 +20,9 @@ class ParametersValidator:
             QMessageBox.critical(self.parent, "Error", "Invalid data entered for function.")
             return False
 
-        if len(function_data) > MAX_POLYNOMIAL_COEFF_AMOUNT:
+        if len(function_data) > MAX_POLYNOMIAL_COEFFICIENT_AMOUNT:
             QMessageBox.critical(self.parent, "Error",
-                                 f"Polynomial degree must be not greater than {MAX_POLYNOMIAL_COEFF_AMOUNT - 1}.")
+                                 f"Polynomial degree must be not greater than {MAX_POLYNOMIAL_COEFFICIENT_AMOUNT - 1}.")
             return False
 
         if left_bound >= right_bound:

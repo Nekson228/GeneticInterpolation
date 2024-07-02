@@ -1,10 +1,9 @@
-from src.algorithms.Mutation.MutationStrategy import MutationStrategy
+from src.algorithms.Mutation.mutation_strategy import MutationStrategy
 
 import numpy as np
-import numpy.polynomial as np_poly
 
 
-class RealNumberMutation(MutationStrategy):
+class RealValuedMutation(MutationStrategy):
     def __init__(self, search_space: float, m: int = 20):
         self._search_space = search_space
         self._m = m
