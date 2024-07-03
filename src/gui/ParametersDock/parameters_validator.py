@@ -2,7 +2,7 @@ from typing import Optional
 
 from PyQt5.QtWidgets import QMessageBox, QWidget
 
-from src.constants import MIN_STEPS_AMOUNT, MAX_POLYNOMIAL_COEFFICIENT_AMOUNT, FUNCTION_COEFFICIENTS_SPLITTER
+from src.constants import MAX_POLYNOMIAL_COEFFICIENT_AMOUNT, FUNCTION_COEFFICIENTS_SPLITTER
 
 
 class ParametersValidator:
@@ -27,10 +27,6 @@ class ParametersValidator:
 
         if left_bound >= right_bound:
             QMessageBox.critical(self.parent, "Error", "Left bound must be less than right bound.")
-            return False
-
-        if steps_amount < MIN_STEPS_AMOUNT:
-            QMessageBox.critical(self.parent, "Error", f"Amount of steps must be greater than {MIN_STEPS_AMOUNT - 1}.")
             return False
 
         return True

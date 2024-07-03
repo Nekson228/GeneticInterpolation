@@ -6,6 +6,8 @@ from src.gui.ParametersDock.parameters_dock_ui import Ui_ParametersDock
 from src.gui.ParametersDock.parameters_validator import ParametersValidator
 from src.gui.ParametersDock.settings_manager import SettingsManager
 
+from src.gui.HyperparametersDialog.hyperparameters_dialog import HyperparametersDialog
+
 
 class ParametersDock(QDockWidget, Ui_ParametersDock):
     goButtonClicked = pyqtSignal(dict, name='goButtonClicked')
@@ -21,6 +23,13 @@ class ParametersDock(QDockWidget, Ui_ParametersDock):
         self.saveButton.clicked.connect(self.save_settings)
         self.loadButton.clicked.connect(self.load_settings)
         self.randomButton.clicked.connect(self.random_settings)
+
+        self.hyperparametersButton.clicked.connect(self.open_hyperparameters_dialog)
+
+    @staticmethod
+    def open_hyperparameters_dialog():
+        dialog = HyperparametersDialog()
+        dialog.exec_()
 
     def validate_input(self) -> bool:
         return self.validator.validate(

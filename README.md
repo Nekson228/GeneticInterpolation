@@ -3,7 +3,7 @@ ETU 2024 summer practise. Genetic algorithm to interpolate polynomials with step
 
 # Running the Project
 
-1. Ensure that you have Python installed on your system. This project requires Python 3.8 or higher.
+1. Ensure that you have Python installed on your system. This project requires Python 3.12 or higher.
 
 2. Clone the repository to your local machine.
 

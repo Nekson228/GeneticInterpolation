@@ -4,8 +4,7 @@ import numpy as np
 
 
 class RealValuedMutation(MutationStrategy):
-    def __init__(self, search_space: float, m: int = 20):
-        self._search_space = search_space
+    def __init__(self, m: int = 20):
         self._m = m
 
     def _calculate_delta(self, size: int) -> float:
@@ -14,8 +13,8 @@ class RealValuedMutation(MutationStrategy):
                        axis=1)
         return delta
 
-    def mutate(self, individual: np.ndarray) -> np.ndarray:
-        alpha = 0.5 * self._search_space
+    def mutate(self, individual: np.ndarray, search_space: tuple[float, float]) -> np.ndarray:
+        alpha = 0.5 * (search_space[1] - search_space[0])
         delta = self._calculate_delta(len(individual))
         sign = np.random.choice([-1, 1], size=len(individual))
         mutated_individual = individual + sign * alpha * delta

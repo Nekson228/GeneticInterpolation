@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>209</width>
-    <height>458</height>
+    <width>189</width>
+    <height>587</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -85,9 +85,20 @@
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="stepsAmountSpinBox"/>
+       <widget class="QSpinBox" name="stepsAmountSpinBox">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+       </widget>
       </item>
      </layout>
+    </item>
+    <item>
+     <widget class="QPushButton" name="hyperparametersButton">
+      <property name="text">
+       <string>Hyperparameters...</string>
+      </property>
+     </widget>
     </item>
     <item>
      <spacer name="verticalSpacer_2">
