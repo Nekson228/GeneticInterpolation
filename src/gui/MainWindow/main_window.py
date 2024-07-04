@@ -1,7 +1,7 @@
 from typing import Optional
 
 from PyQt5.QtWidgets import QMainWindow
-from PyQt5 import QtGui, Qt, QtCore
+from PyQt5 import Qt, QtCore
 from PyQt5.QtCore import QTime, QTimer
 
 from src.gui.MainWindow.main_window_ui import Ui_MainWindow
@@ -42,18 +42,27 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.controlPanelDock.nextButtonClicked.connect(self.next)
         self.controlPanelDock.ffButtonClicked.connect(self.fast_forward)
 
+        self.refresh_timer = QTimer(self)
+        self.refresh_timer.timeout.connect(self.next)
+
         self.plotManager = PlotManager(MplCanvas(self.canvas))
         self.geneticManager = GeneticAlgorithmManager()
         self.sessionManager = SessionManager(self.plotManager, self.geneticManager)
 
         self.step_function: Optional[StepFunction] = None
 
-    def play(self):
-        pass
+    def play(self, is_playing: bool):
+        if is_playing:
+            self.refresh_timer.stop()
+        else:
+            self.refresh_timer.start(self.controlPanelDock.refresh_rate)
 
     def next(self):
         proceed = self.geneticManager.genetic.step()
         if not proceed:
+            if self.refresh_timer.isActive():
+                self.refresh_timer.stop()
+                self.controlPanelDock.toggle_play_button(True)
             self.controlPanelDock.toggle_controls(False)
         self.plotManager.update_population_plots(self.geneticManager.genetic, self.step_function)
 

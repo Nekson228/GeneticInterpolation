@@ -84,7 +84,7 @@ class Ui_HyperparametersDialog(object):
 
     def retranslateUi(self, HyperparametersDialog):
         _translate = QtCore.QCoreApplication.translate
-        HyperparametersDialog.setWindowTitle(_translate("HyperparametersDialog", "Dialog"))
+        HyperparametersDialog.setWindowTitle(_translate("HyperparametersDialog", "Hyperparameters"))
         self.mutationRateLabel.setText(_translate("HyperparametersDialog", "Mutation rate"))
         self.crossoverRateLabel.setText(_translate("HyperparametersDialog", "Crossover rate"))
         self.populationSizeLabel.setText(_translate("HyperparametersDialog", "Population size"))

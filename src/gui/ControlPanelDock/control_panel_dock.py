@@ -31,24 +31,28 @@ class ControlPanelDock(QDockWidget, Ui_ControlPanelDock):
         self.is_playing = False
         self.controls_enabled = False
 
+    @property
+    def refresh_rate(self):
+        return self.refreshSpinBox.value()
+
+    def toggle_play_button(self, is_playing: bool):
+        self.playButton.setIcon(self.PLAY_ICON if is_playing else self.PAUSE_ICON)
+        self.is_playing = not is_playing
+
     def toggle_controls(self, enable_controls: bool, toggle_play: bool = True):
-        if self.controls_enabled == enable_controls:
-            return
         if toggle_play:
             self.playButton.setEnabled(enable_controls)
+        if self.controls_enabled == enable_controls:
+            return
         self.nextButton.setEnabled(enable_controls)
         self.ffButton.setEnabled(enable_controls)
+        self.refreshSpinBox.setEnabled(enable_controls)
         self.controls_enabled = enable_controls
 
     def play(self):
-        if self.is_playing:
-            self.is_playing = False
-            self.playButton.setIcon(self.PLAY_ICON)
-        else:
-            self.is_playing = True
-            self.playButton.setIcon(self.PAUSE_ICON)
+        self.toggle_play_button(self.is_playing)
         self.toggle_controls(not self.is_playing, toggle_play=False)
-        self.playButtonClicked.emit(self.is_playing)
+        self.playButtonClicked.emit(not self.is_playing)
 
     def next(self):
         self.nextButtonClicked.emit()
