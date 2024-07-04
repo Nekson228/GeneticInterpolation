@@ -1,1 +1,1 @@
-{"f(x)": [1.0, 0.0, 0.0], "steps_amount": 1, "left_bound": -2.0, "right_bound": 2.0}
+{"f(x)": [1.0, 0.0, 0.0], "steps_amount": 5, "left_bound": -2.0, "right_bound": 2.0}

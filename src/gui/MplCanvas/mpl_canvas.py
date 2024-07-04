@@ -1,6 +1,7 @@
-import matplotlib
+import matplotlib as mpl
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
+from matplotlib.lines import Line2D
 
 import numpy as np
 
@@ -9,7 +10,7 @@ from enum import Enum
 
 from src.algorithms.step_function import StepFunction
 
-matplotlib.use('Qt5Agg')
+mpl.use('Qt5Agg')
 
 
 class PlotType(Enum):
@@ -22,20 +23,23 @@ class MplCanvas(FigureCanvas):
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = fig.subplots(1, 2)
         super(MplCanvas, self).__init__(fig)
+
         self.setParent(parent)
 
-    def plot_function(self, f: Callable[[float], float], left_bound: float, right_bound: float, fmt: str = 'b-'):
+        self.step_lines: list[Line2D] = []
+
+    def plot_function(self, f: Callable[[float], float], left_bound: float, right_bound: float, fmt: str = 'black'):
         x = np.linspace(left_bound, right_bound, int(self.figure.get_dpi() * self.figure.get_figwidth()))
         y = np.vectorize(f)(x)
-        self.axes[PlotType.MAIN_FUNCTION].plot(x, y, fmt)
+        self.axes[0].plot(x, y, fmt)
 
     def plot_step_function(self, step_f: StepFunction, fmt: str = 'r-'):
         for height, interval in step_f:
-            self.axes[PlotType.MAIN_FUNCTION].plot(interval, (height, height), fmt)
+            self.step_lines.append(*self.axes[0].plot(interval, (height, height), fmt))
 
     def plot_quality_function(self, values: np.ndarray, n: int, fmt: str = 'r-'):
         x = np.arange(1, n + 1)
-        self.axes[PlotType.QUALITY_FUNCTION].plot(x, values, fmt)
+        self.axes[1].plot(x, values, fmt)
 
     def clear(self, plot_type: PlotType = PlotType.MAIN_FUNCTION):
         self.axes[plot_type.value].clear()
@@ -43,6 +47,11 @@ class MplCanvas(FigureCanvas):
     def clear_all(self):
         for ax in self.axes:
             ax.clear()
+
+    def clear_step_lines(self):
+        for line in self.step_lines:
+            line.remove()
+        self.step_lines.clear()
 
     def render(self):
         self.draw()

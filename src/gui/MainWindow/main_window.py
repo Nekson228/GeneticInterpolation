@@ -49,8 +49,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.parametersDock.goButtonClicked.connect(self.update_session)
 
         self.is_playing = False
-        self.is_controls_disabled = False
+        self.is_controls_disabled = True
 
+        self.settings: Optional[SettingsData] = None
         self.genetic: Optional[GeneticAlgorithm] = None
         self.step_function: Optional[StepFunction] = None
 
@@ -65,12 +66,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             print('Play')
 
     def next(self):
-        print('Next')
+        proceed = self.genetic.step()
+        if not proceed:
+            self.toggle_controls(False)
+            self.is_controls_disabled = True
+        self._update_population_plots()
 
     def toggle_controls(self, enable: bool) -> None:
         self.playButton.setEnabled(enable)
         self.nextButton.setEnabled(enable)
-        self.parametersDock.setEnabled(enable)
+        self.ffButton.setEnabled(enable)
 
     def _update_genetic(self, settings: SettingsData) -> None:
         session_init = GeneticSessionInitializer(settings)
@@ -78,6 +83,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.genetic = GeneticAlgorithm(hyper_init, session_init)
 
     def _update_population_plots(self) -> None:
+        self.canvas.clear_step_lines()
         top3_best = self.genetic.get_top_individuals(3)
         for i, individual in enumerate(top3_best):
             self.step_function.step_heights = individual
@@ -99,3 +105,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.step_function = StepFunction(settings['steps_amount'], settings['left_bound'], settings['right_bound'])
         self._update_genetic(settings)
+        self._update_population_plots()
+
+        self.settings = settings
