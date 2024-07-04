@@ -1,8 +1,8 @@
 from typing import TypedDict, Literal, get_args
 
-SelectionStr = Literal['rank_based']
+SelectionStr = Literal['rank_based', 'roulette']
 CrossoverStr = Literal['uniform', 'intermediate']
-MutationStr = Literal['real_valued']
+MutationStr = Literal['real_valued', 'swap']
 
 selection_strategy_keys = get_args(SelectionStr)
 crossover_strategy_keys = get_args(CrossoverStr)
