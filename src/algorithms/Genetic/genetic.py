@@ -29,7 +29,7 @@ class GeneticAlgorithm:
         self.quality_function: QualityFunction = MeanStepDistance(self.left_bound, self.right_bound,
                                                                   self.function, self.chromosome_length)
 
-        self.current_generation = 0
+        self.current_generation = 1
 
         self.points_per_step = NUMBER_OF_FUNCTION_POINTS // self.chromosome_length
 
@@ -45,7 +45,6 @@ class GeneticAlgorithm:
         Perform one iteration of the algorithm.
         :return: True if the algorithm should continue, False otherwise.
         """
-        self.current_generation += 1
         if self.current_generation == self.max_generations:
             return False
 
@@ -67,6 +66,7 @@ class GeneticAlgorithm:
         self.current_quality_function_values = self.quality_function.calculate(self.current_population)
         self.best_quality_function_values[self.current_generation] = self.current_quality_function_values.min()
 
+        self.current_generation += 1
         return True if self.current_generation != self.max_generations else False
 
     def run(self) -> None:
@@ -74,8 +74,8 @@ class GeneticAlgorithm:
         Run the algorithm until reaching the maximum iteration amount.
         :return:
         """
-        while self.current_generation != self.max_generations:
-            self.step()
+        while self.step():
+            pass
 
     def get_top_individuals(self, n: int) -> np.ndarray:
         """

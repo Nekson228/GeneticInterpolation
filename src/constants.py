@@ -2,9 +2,13 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
+SESSIONS_DIR = os.path.join(BASE_DIR, 'sessions')
+UI_DIR = os.path.join(BASE_DIR, 'ui')
+SRC_DIR = os.path.join(BASE_DIR, 'src')
 IMAGES_DIR = os.path.join(ASSETS_DIR, 'images')
 PARAMETERS_DIR = os.path.join(ASSETS_DIR, 'parameters')
-SESSIONS_DIR = os.path.join(BASE_DIR, 'sessions')
+GUI_SRC_DIR = os.path.join(SRC_DIR, 'gui')
+HYPERPARAMETERS_PATH = os.path.join(PARAMETERS_DIR, 'hyperparameters.json')
 
 JSON_FILE_FILTER = "JSON Files (*.json)"
 

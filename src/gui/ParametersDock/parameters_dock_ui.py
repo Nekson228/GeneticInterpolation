@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'ui/parameters_dock.ui'
+# Form implementation generated from reading ui file 'parameters_dock.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #
@@ -15,6 +15,13 @@ class Ui_ParametersDock(object):
     def setupUi(self, ParametersDock):
         ParametersDock.setObjectName("ParametersDock")
         ParametersDock.resize(189, 587)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(ParametersDock.sizePolicy().hasHeightForWidth())
+        ParametersDock.setSizePolicy(sizePolicy)
+        ParametersDock.setFeatures(QtWidgets.QDockWidget.DockWidgetFloatable|QtWidgets.QDockWidget.DockWidgetMovable)
+        ParametersDock.setAllowedAreas(QtCore.Qt.LeftDockWidgetArea|QtCore.Qt.RightDockWidgetArea)
         self.dockWidgetContents = QtWidgets.QWidget()
         self.dockWidgetContents.setObjectName("dockWidgetContents")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.dockWidgetContents)
@@ -70,7 +77,7 @@ class Ui_ParametersDock(object):
         self.loadButton = QtWidgets.QPushButton(self.dockWidgetContents)
         self.loadButton.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("ui/../assets/images/load-from-file-48.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("/home/neepaw/PycharmProjects/GeneticInterpolation/ui/../assets/images/load-from-file-48.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.loadButton.setIcon(icon)
         self.loadButton.setIconSize(QtCore.QSize(30, 30))
         self.loadButton.setObjectName("loadButton")
@@ -78,7 +85,7 @@ class Ui_ParametersDock(object):
         self.saveButton = QtWidgets.QPushButton(self.dockWidgetContents)
         self.saveButton.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("ui/../assets/images/save-50.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("/home/neepaw/PycharmProjects/GeneticInterpolation/ui/../assets/images/save-50.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.saveButton.setIcon(icon1)
         self.saveButton.setIconSize(QtCore.QSize(30, 30))
         self.saveButton.setObjectName("saveButton")
@@ -86,7 +93,7 @@ class Ui_ParametersDock(object):
         self.randomButton = QtWidgets.QPushButton(self.dockWidgetContents)
         self.randomButton.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("ui/../assets/images/dice-60.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap("/home/neepaw/PycharmProjects/GeneticInterpolation/ui/../assets/images/dice-60.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.randomButton.setIcon(icon2)
         self.randomButton.setIconSize(QtCore.QSize(30, 30))
         self.randomButton.setObjectName("randomButton")

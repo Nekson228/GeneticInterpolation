@@ -1,110 +1,68 @@
-import os
 from typing import Optional
 
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5 import QtGui, Qt, QtCore
 from PyQt5.QtCore import QTime, QTimer
 
-import numpy as np
-
 from src.gui.MainWindow.main_window_ui import Ui_MainWindow
+from src.gui.MainWindow.plot_manager import PlotManager
+from src.gui.MainWindow.genetic_algorithm_manager import GeneticAlgorithmManager
+from src.gui.MainWindow.session_manager import SessionManager
 
 from src.gui.ParametersDock.parameters_dock import ParametersDock
+from src.gui.ControlPanelDock.control_panel_dock import ControlPanelDock
 
 from src.gui.MplCanvas.mpl_canvas import MplCanvas
 
-from src.constants import IMAGES_DIR, PARAMETERS_DIR
-
 from src.data_structures.settings_data import SettingsData
-
-from src.algorithms.Genetic.genetic import GeneticAlgorithm
-from src.algorithms.Genetic.genetic_session_initializer import GeneticSessionInitializer
-from src.algorithms.Genetic.genetic_hyper_initializer import GeneticHyperInitializer
 
 from src.algorithms.step_function import StepFunction
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
-    PLAY_ICON_PATH = os.path.join(IMAGES_DIR, 'play-50.png')
-    PAUSE_ICON_PATH = os.path.join(IMAGES_DIR, 'pause-50.png')
-    HYPERPARAMETERS_PATH = os.path.join(PARAMETERS_DIR, 'hyperparameters.json')
-
-    TOP3_FMT = ['red', 'orange', 'yellow']
-
     def __init__(self):
         super().__init__()
         self.setupUi(self)
 
-        self.play_icon = QtGui.QIcon(MainWindow.PLAY_ICON_PATH)
-        self.pause_icon = QtGui.QIcon(MainWindow.PAUSE_ICON_PATH)
+        self.controlPanelDock = ControlPanelDock()
+        self.addDockWidget(Qt.Qt.BottomDockWidgetArea, self.controlPanelDock)
 
         self.parametersDock = ParametersDock()
         self.addDockWidget(Qt.Qt.LeftDockWidgetArea, self.parametersDock)
 
-        self.canvas = MplCanvas(self.canvas)
+        self.setCorner(Qt.Qt.BottomLeftCorner, Qt.Qt.LeftDockWidgetArea)
+        self.setCorner(Qt.Qt.TopLeftCorner, Qt.Qt.LeftDockWidgetArea)
 
-        self.playButton.clicked.connect(self.play)
-        self.nextButton.clicked.connect(self.next)
+        self.setCorner(Qt.Qt.BottomRightCorner, Qt.Qt.RightDockWidgetArea)
+        self.setCorner(Qt.Qt.TopRightCorner, Qt.Qt.RightDockWidgetArea)
 
         self.parametersDock.goButtonClicked.connect(self.update_session)
 
-        self.is_playing = False
-        self.is_controls_disabled = True
+        self.controlPanelDock.playButtonClicked.connect(self.play)
+        self.controlPanelDock.nextButtonClicked.connect(self.next)
+        self.controlPanelDock.ffButtonClicked.connect(self.fast_forward)
 
-        self.settings: Optional[SettingsData] = None
-        self.genetic: Optional[GeneticAlgorithm] = None
+        self.plotManager = PlotManager(MplCanvas(self.canvas))
+        self.geneticManager = GeneticAlgorithmManager()
+        self.sessionManager = SessionManager(self.plotManager, self.geneticManager)
+
         self.step_function: Optional[StepFunction] = None
 
     def play(self):
-        if self.is_playing:
-            self.is_playing = False
-            self.playButton.setIcon(self.play_icon)
-            print('Pause')
-        else:
-            self.is_playing = True
-            self.playButton.setIcon(self.pause_icon)
-            print('Play')
+        pass
 
     def next(self):
-        proceed = self.genetic.step()
+        proceed = self.geneticManager.genetic.step()
         if not proceed:
-            self.toggle_controls(False)
-            self.is_controls_disabled = True
-        self._update_population_plots()
+            self.controlPanelDock.toggle_controls(False)
+        self.plotManager.update_population_plots(self.geneticManager.genetic, self.step_function)
 
-    def toggle_controls(self, enable: bool) -> None:
-        self.playButton.setEnabled(enable)
-        self.nextButton.setEnabled(enable)
-        self.ffButton.setEnabled(enable)
-
-    def _update_genetic(self, settings: SettingsData) -> None:
-        session_init = GeneticSessionInitializer(settings)
-        hyper_init = GeneticHyperInitializer.from_json(MainWindow.HYPERPARAMETERS_PATH)
-        self.genetic = GeneticAlgorithm(hyper_init, session_init)
-
-    def _update_population_plots(self) -> None:
-        self.canvas.clear_step_lines()
-        top3_best = self.genetic.get_top_individuals(3)
-        for i, individual in enumerate(top3_best):
-            self.step_function.step_heights = individual
-            self.canvas.plot_step_function(self.step_function, MainWindow.TOP3_FMT[i])
-
-        best_quality = self.genetic.get_best_quality_function_values()
-        self.canvas.plot_quality_function(best_quality, self.genetic.current_generation)
-        self.canvas.render()
+    def fast_forward(self):
+        self.geneticManager.genetic.run()
+        self.controlPanelDock.toggle_controls(False)
+        self.plotManager.update_population_plots(self.geneticManager.genetic, self.step_function)
 
     def update_session(self, settings: SettingsData) -> None:
-        polynomial = np.polynomial.Polynomial(settings['f(x)'][::-1])
-        self.canvas.clear_all()
-        self.canvas.plot_function(polynomial, settings['left_bound'], settings['right_bound'])
-        self.canvas.render()
-
-        if self.is_controls_disabled:
-            self.toggle_controls(True)
-            self.is_controls_disabled = False
-
-        self.step_function = StepFunction(settings['steps_amount'], settings['left_bound'], settings['right_bound'])
-        self._update_genetic(settings)
-        self._update_population_plots()
-
-        self.settings = settings
+        self.plotManager.update_session_plots(settings)
+        self.controlPanelDock.toggle_controls(True)
+        self.step_function = self.sessionManager.update_session(settings)

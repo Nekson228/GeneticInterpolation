@@ -2,6 +2,7 @@ from src.algorithms.Crossover.crossover_strategy import CrossoverStrategy
 
 import numpy as np
 
+
 class IntermediateRecombination(CrossoverStrategy):
     def __init__(self, d: float = 0.25):
         """
