@@ -1,8 +1,9 @@
+import json.decoder
 from json import dump, load
 from random import randint
 from typing import Optional
 
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QWidget, QMessageBox
 
 from src.gui.ParametersDock.file_dialog_manager import FileDialogManager
 
@@ -25,11 +26,20 @@ class SettingsManager:
             'right_bound': self.widgets.rightBoundDoubleSpinBox.value(),
         }
 
-    def set_settings(self, settings: SettingsData) -> None:
-        self.widgets.functionLineEdit.setText(FUNCTION_COEFFICIENTS_SPLITTER.join(map(str, settings['f(x)'])))
-        self.widgets.stepsAmountSpinBox.setValue(settings['steps_amount'])
-        self.widgets.leftBoundDoubleSpinBox.setValue(settings['left_bound'])
-        self.widgets.rightBoundDoubleSpinBox.setValue(settings['right_bound'])
+    def set_settings(self, settings: SettingsData) -> bool:
+        try:
+            function = settings['f(x)']
+            left_bound = settings['left_bound']
+            right_bound = settings['right_bound']
+            steps_amount = settings['steps_amount']
+        except KeyError as e:
+            QMessageBox.critical(None, "Error", f"JSON file does not contain field {e.args}")
+            return False
+        self.widgets.functionLineEdit.setText(FUNCTION_COEFFICIENTS_SPLITTER.join(map(str, function)))
+        self.widgets.leftBoundDoubleSpinBox.setValue(left_bound)
+        self.widgets.rightBoundDoubleSpinBox.setValue(right_bound)
+        self.widgets.stepsAmountSpinBox.setValue(steps_amount)
+        return True
 
     def save_settings(self) -> None:
         filename, _ = self.file_dialog_manager.save_file_dialog()
@@ -38,12 +48,16 @@ class SettingsManager:
         with open(filename, 'w') as file:
             dump(self.get_settings(), file)
 
-    def load_settings(self) -> None:
+    def load_settings(self) -> bool:
         filename, _ = self.file_dialog_manager.load_file_dialog()
         if not filename:
-            return
-        with open(filename, 'r') as file:
-            self.set_settings(load(file))
+            return False
+        try:
+            with open(filename, 'r') as file:
+                return self.set_settings(load(file))
+        except json.decoder.JSONDecodeError:
+            QMessageBox.critical(None, "Error", "JSON file is invalid.")
+            return False
 
     def random_settings(self) -> None:
         self.set_settings({

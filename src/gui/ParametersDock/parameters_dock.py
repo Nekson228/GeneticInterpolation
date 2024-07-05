@@ -49,8 +49,10 @@ class ParametersDock(QDockWidget, Ui_ParametersDock):
         self.emit_go_button_clicked()
 
     def save_settings(self):
+        if not self.validate_input():
+            return
         self.settings_manager.save_settings()
 
     def load_settings(self):
-        self.settings_manager.load_settings()
-        self.emit_go_button_clicked()
+        if self.settings_manager.load_settings():
+            self.emit_go_button_clicked()

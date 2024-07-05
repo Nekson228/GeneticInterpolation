@@ -1,1 +1,1 @@
-{"mutation_rate": 0.1, "crossover_rate": 0.7, "population_size": 100, "max_generations": 100, "selection_strategy": "rank_based", "crossover_strategy": "intermediate", "mutation_strategy": "swap"}
+{"mutation_rate": 0.1, "crossover_rate": 0.7, "population_size": 100, "max_generations": 100, "selection_strategy": "rank_based", "crossover_strategy": "uniform", "mutation_strategy": "swap"}
