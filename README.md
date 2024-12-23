@@ -1,5 +1,5 @@
-# Genetic Interpolation
-ETU 2024 summer practise. Genetic algorithm to interpolate polynomials with step function.
+# Genetic Optimization
+ETU 2024 summer practise. Genetic algorithm to optimize polynomials with step function.
 
 # Running the Project
 
